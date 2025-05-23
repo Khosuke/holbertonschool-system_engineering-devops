@@ -1,0 +1,42 @@
+# Scale Up Diagram :
+
+![alt text](<Scale Up.png>)
+
+# Textual Explanation of Each Addition
+
+### Additional Load Balancer (HAProxy)
+
+**Why:** Avoids a Single Point of Failure (SPOF). If one load balancer goes down, the other handles traffic.
+**How:** Configured in a cluster (usually via VRRP using Keepalived).
+**Benefit:** Ensures high availability of your entry point.
+
+### New Server (for Scaling)
+
+**Why:** Adds more resources (CPU, memory, storage) to handle growing traffic and data.
+**Use:** Hosts new services (in this case, a third database replica).
+
+### Component Separation (Split Roles)
+
+Instead of hosting web server, app server, and database on each machine, you now have:
+
+**1. Web Servers (NGINX)**
+
+Dedicated to handling static files and HTTP(S) requests.
+Scales horizontally with more NGINX instances behind the load balancer.
+
+**2. Application Servers**
+
+Handle business logic, API requests, and dynamic content generation.
+Easily scalable independently of the DB and web layer.
+
+**3. Database Servers**
+
+Primary server handles writes.
+Replicas handle reads and provide redundancy.
+Each is now on its own machine, improving performance and security isolation.
+
+# Benefits of This Setup
+
+**Horizontal Scaling:** Add more servers per layer (web, app, DB) as needed.
+**Fault Tolerance:** Failures in one tier don’t crash the whole system.
+**Performance:** Specialized servers are more efficient.

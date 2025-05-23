@@ -1,0 +1,60 @@
+# Distributed Web Infrastructure Diagram :
+
+![alt text](<Distributed Web Infra.png>)
+
+# Infrastructure Components
+### Load Balancer (HAProxy)
+
+**Why added:** It distributes incoming traffic between the two servers, preventing overload on a single machine.
+
+**Distribution Algorithm:** Round-robin – requests are sent alternately to each server, ensuring even load distribution.
+
+**Active-Active Setup:** Both servers handle requests simultaneously.
+
+**Active-Active:** Improves performance and redundancy (used here).
+
+**Active-Passive:** One server handles traffic; the other is on standby for failover.
+
+### Two Servers (identical setup)
+Each server contains:
+
+**NGINX (Web Server):** Handles incoming HTTP/S requests and serves static content.
+
+**Application Server:** Executes the backend logic (e.g., PHP, Python).
+
+**Application Files:** The website’s codebase, including dynamic content processing logic.
+
+**Why added:**
+Improves fault tolerance (one can fail and the site stays up).
+Increases capacity to serve more users.
+
+### Database Cluster (Primary + Replica)
+
+**Primary (Master):** Handles all writes and updates.
+
+**Replica (Slave):** Syncs from the Primary and handles read-only queries.
+
+**Why added:**
+Reduces read load on the Primary.
+Provides redundancy for failover and data safety.
+
+# Infrastructure Issues
+### Single Point of Failure (SPOF)
+
+The Load Balancer itself is a SPOF. If it fails, users can’t access the servers.
+
+**Solution:** Use a second Load Balancer in Active-Passive or Active-Active mode.
+
+### Security Issues
+
+**No firewall:** Servers are exposed to unwanted traffic.
+
+**No HTTPS**: Communication is not encrypted, risking data interception.
+
+**Solution:** Use TLS certificates and configure HTTPS.
+
+### No Monitoring
+
+No system to track server health, traffic, or database replication status.
+
+**Solution:** Add tools like Prometheus, Grafana, or Nagios for real-time alerts and metrics.

@@ -1,0 +1,68 @@
+# Secure & Monitored Web Infrastructure Diagram :
+
+![alt text](<Secure Web Infra.png>)
+
+# Secure & Monitored Web Infrastructure – Explanation
+### User Access via HTTPS
+
+Users access www.foobar.com through their browser.
+Traffic is encrypted using HTTPS (via an SSL certificate on the load balancer).
+This protects user data from eavesdropping or tampering.
+
+### Load Balancer (HAProxy with SSL Termination)
+
+**Purpose:** Distributes incoming traffic across the three backend servers.
+**SSL Termination:** Decrypts HTTPS at the load balancer so backend servers receive HTTP unless re-encryption is configured.
+**Benefit:** Reduces SSL processing load on backend servers.
+**Issue:** Internal traffic is unencrypted unless re-encrypted—this can be a security risk in compromised networks.
+
+### Firewalls (One per Server)
+
+**Purpose:** Each server is protected by a dedicated firewall.
+**Function:** Blocks unauthorized access, restricts traffic by port/IP/protocol.
+**Benefit:** Reduces attack surface and enforces access control at each layer.
+
+### Backend Servers (3 Identical Nodes)
+
+**Each server includes:**
+**NGINX Web Server:** Handles static content and forwards dynamic requests.
+**Application Server:** Processes the backend logic (e.g., PHP, Python).
+
+**MySQL Database:**
+Server 1 has the Primary DB (handles all writes).
+Server 2 & 3 have Replica DBs (read-only copies synced from the Primary).
+
+**Monitoring Client:** Installed to collect and send logs/metrics to the central monitoring service.
+
+### Database Setup: Primary + Replicas
+
+**Primary (Writable):** Accepts all data modifications (INSERT/UPDATE/DELETE).
+**Replicas (Read-Only):** Sync from the Primary and are used to offload read queries.
+**Issue:** If the Primary fails, writes stop. Requires failover or promotion of a Replica.
+
+### Monitoring System (e.g., SumoLogic, Prometheus, etc.)
+
+**Purpose:** Collects metrics, logs, system health data.
+**How:** Monitoring agents on each server send data to the central system.
+**Use Case:** Helps detect downtimes, unusual activity, performance issues.
+
+**QPS Monitoring Example:**
+Add instrumentation to NGINX or app code.
+Export query/request count to the monitoring system.
+Visualize QPS (Queries Per Second) on a dashboard.
+
+# Limitations of This Setup
+### SSL Termination at Load Balancer
+
+Internal traffic from LB to backend is not encrypted by default.
+**Mitigation:** Enable SSL passthrough or re-encrypt at LB to backend.
+
+### Single Writable MySQL Node
+
+All writes depend on one Primary DB.
+**Mitigation:** Use a high-availability MySQL setup (e.g., Galera Cluster or automatic failover tools).
+
+### Identical Server Roles (Web, App, DB on Same Machine)
+
+Increased risk if one server is compromised (all layers exposed).
+**Mitigation:** Use role separation—dedicated DB servers, stateless app nodes, isolated tiers.

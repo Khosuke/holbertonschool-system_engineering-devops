@@ -1,0 +1,59 @@
+# Simple Web server diagram: 
+
+![alt text](<Scale Up.png>)
+
+#### User -> www.foobar.com
+
+A user wants to visit a website and types www.foobar.com into their browser.
+
+#### Domain Name (foobar.com)
+
+This is the human-friendly name that maps to your website.
+The DNS (Domain Name System) translates www.foobar.com to the IP address 8.8.8.8.
+
+#### DNS Record
+
+The www part is a subdomain.
+It uses an A record to point to the IP address of the server.
+
+#### Server (IP: 8.8.8.8)
+
+A server is a powerful computer that runs 24/7 to respond to web requests.
+It hosts everything: web server, app server, codebase, and database.
+
+#### Web Server (Nginx)
+
+Handles HTTP(S) requests from users.
+Serves static content (images, CSS) and forwards dynamic requests to the app server.
+
+#### Application Server
+
+Runs your code (e.g., PHP, Python).
+Processes logic, handles user input, and communicates with the database.
+
+#### Application Files
+
+This is your website's codebase: HTML, PHP, etc.
+
+#### Database (MySQL)
+
+Stores user data, site content, etc.
+The application server queries the database for dynamic data.
+
+#### Communication Protocol
+
+The user communicates with the server using HTTPS, ensuring secure data transfer.
+
+## Infrastructure Limitations :
+#### Single Point of Failure (SPOF)
+
+If the one server goes down, the entire site is unavailable.
+
+#### Downtime for Maintenance
+
+Restarting the web server (e.g., for code updates) causes temporary outages.
+
+#### No Scalability
+
+One server cannot handle high traffic or load spikes efficiently.
+
