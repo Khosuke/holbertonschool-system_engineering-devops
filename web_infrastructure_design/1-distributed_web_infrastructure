@@ -1,6 +1,6 @@
 # Distributed Web Infrastructure Diagram :
 
-![alt text](<Distributed Web Infra.png>)
+![Distributed Web Infra](https://github.com/Khosuke/holbertonschool-system_engineering-devops/raw/main/web_infrastructure_design/Distributed%20Web%20Infra.png)
 
 # Infrastructure Components
 ### Load Balancer (HAProxy)
